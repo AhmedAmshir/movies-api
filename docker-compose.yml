@@ -1,0 +1,58 @@
+version: '3'
+
+services:
+  php-fpm:
+    container_name: movie_php
+    build: build/php-fpm
+    expose:
+        - '9000'
+    volumes:
+        - ./public_html:/var/www/html
+    networks: 
+        - movie_api
+    restart: always
+
+  nginx-web:
+    container_name: movie_nginx
+    build: build/nginx
+    ports:
+        - '8085:85'
+    volumes:
+        - ./public_html:/var/www/html
+        - ./build/nginx/sites-enabled:/etc/nginx/sites-enabled
+    networks: 
+        - movie_api
+    restart: always
+  
+  myadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: movie_phpmyadmin
+    ports:
+        - "8088:80"
+    environment:
+        - PMA_ARBITRARY=1
+#	- PMA_HOST=movie_mysql
+    restart: always
+    depends_on:
+        - mysqldb
+    networks: 
+        - movie_api
+
+  mysqldb:
+    image: mysql:5.7
+    container_name: movie_mysql
+    restart: always
+    environment:
+        - MYSQL_DATABASE=movies
+        - MYSQL_ROOT_PASSWORD=1415235
+        - MYSQL_USER=root
+        - MYSQL_PASSWORD=1415235
+    ports:
+        - "3306:3306"
+    volumes:
+        - "./data/db/mysql:/var/lib/mysql"
+    networks: 
+        - movie_api
+networks:
+  movie_api:
+     driver: bridge
