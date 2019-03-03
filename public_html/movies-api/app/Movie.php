@@ -151,10 +151,11 @@ class Movie extends Model {
                 'director' => $data['director'],
                 'release_year' => $data['year'],
                 'main_actors' => $data['actors'],
-                'created_at' => $now
+                'created_at' => $now,
+                'updated_at' => $now
             ]);
 
-            $trans_id = $this->insertTranslations($data, $movie_id, $lang);
+            $trans_id = $this->insertTranslations($data, $lang, $movie_id);
             return [$movie_id, $trans_id];
 
         } catch(\Exception $e) {
@@ -162,7 +163,7 @@ class Movie extends Model {
         }
     }
 
-    public function insertTranslations($options, $movie_id, $lang)
+    public function insertTranslations($options, $lang, $movie_id)
     {
         $now = Carbon::now();
         return DB::table('movie_translations')->insertGetId([
@@ -170,7 +171,8 @@ class Movie extends Model {
             'description' => $options['description'],
             'lang' => $lang,
             'movie_id' => $movie_id,
-            'created_at' => $now
+            'created_at' => $now,
+            'updated_at' => $now
         ]);
     }
 }

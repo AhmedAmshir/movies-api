@@ -14,7 +14,7 @@ class MovieTranslations extends Model {
      *
      * @var array
      */
-    protected $fillable = ['title', 'desription', 'genre', 'lang'];
+    protected $fillable = ['title', 'desription', 'lang', 'movie_id'];
 
     public function movie()
     {

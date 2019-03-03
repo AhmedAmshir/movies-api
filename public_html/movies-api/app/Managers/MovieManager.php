@@ -131,8 +131,9 @@ class MovieManager implements MovieManagerInterface {
 
             $result = $this->movie_model->insertMovieData($options, GeneralEnum::$_locale['arabic']);
             $this->addTranslationsGenres($result[1], $genres);
-
-            $translations_en_id = $this->movie_model->insertTranslations(['title' => $options['title_en'], 'description' => $options['description_en']], $result[1], GeneralEnum::$_locale['english']);
+            // var_dump($translations_en_id);die;
+            $translations_en_id = $this->movie_model->insertTranslations(['title' => $options['title_en'], 'description' => $options['description_en']], GeneralEnum::$_locale['english'], $result[0]);
+            
             if($translations_en_id) {
                 return $this->addTranslationsGenres($translations_en_id, $genres_en);
             }
