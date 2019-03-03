@@ -50,6 +50,7 @@ class MoviesController extends Controller
             if(array_key_exists('rating', $this->request_data)) {
                 $rating = $this->request_data['rating'];
                 if(!is_numeric($rating[0]) && in_array($rating[0], GeneralEnum::$greater_or_lower)) {
+
                     if($rating[0] == GeneralEnum::$greater_or_lower['greater']) {
                         $options['greater_rating'] = substr($rating, 1);
                     } elseif ($rating[0] == GeneralEnum::$greater_or_lower['lower']) {
@@ -147,12 +148,15 @@ class MoviesController extends Controller
         if(!array_key_exists('id', $this->request_data)) {
             return $this->response_handler->BadRequest("Invalid Parameters 'id'");
         }
+	 if($this->request_data['rating'] > 10 || $this->request_data['rating'] < 0) {
+            return $this->response_handler->NotFound('Rating must be in between 0 and 10');
+        }
 
         $options['id'] = $this->request_data['id'];
         $options['lang'] = $this->request_data['lang'];
         unset($this->request_data['id']);
         unset($this->request_data['lang']);
-
+	 unset($this->request_data['api_key']);
         if(empty($this->request_data)) {
             return $this->response_handler->NotFound('Not Found Parameters To Update');
         }
@@ -205,6 +209,7 @@ class MoviesController extends Controller
         && array_key_exists('image_url', $this->request_data) && array_key_exists('description_en', $this->request_data)
         && array_key_exists('title_en', $this->request_data)  && array_key_exists('genre_en', $this->request_data)) {
 
+	     unset($this->request_data['api_key']);
             if($this->request_data['rating'] > 10 || $this->request_data['rating'] < 0) {
                 return $this->response_handler->NotFound('Rating must be in between 0 and 10');
             }
