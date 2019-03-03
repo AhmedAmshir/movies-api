@@ -148,7 +148,8 @@ class MoviesController extends Controller
         if(!array_key_exists('id', $this->request_data)) {
             return $this->response_handler->BadRequest("Invalid Parameters 'id'");
         }
-	 if($this->request_data['rating'] > 10 || $this->request_data['rating'] < 0) {
+        
+        if(array_key_exists('rating', $this->request_data) && ($this->request_data['rating'] > 10 || $this->request_data['rating'] < 0)) {
             return $this->response_handler->NotFound('Rating must be in between 0 and 10');
         }
 
@@ -156,7 +157,7 @@ class MoviesController extends Controller
         $options['lang'] = $this->request_data['lang'];
         unset($this->request_data['id']);
         unset($this->request_data['lang']);
-	 unset($this->request_data['api_key']);
+	    unset($this->request_data['api_key']);
         if(empty($this->request_data)) {
             return $this->response_handler->NotFound('Not Found Parameters To Update');
         }
