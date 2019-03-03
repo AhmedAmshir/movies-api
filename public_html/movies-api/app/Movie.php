@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Enum\GeneralEnum;
 
 class Movie extends Model {
 
@@ -139,7 +140,7 @@ class Movie extends Model {
         }
     }
 
-    public function save($data = []) {
+    public function insertMovieData($data = [], $lang) {
 
         try {
             $now = Carbon::now();
@@ -153,15 +154,23 @@ class Movie extends Model {
                 'created_at' => $now
             ]);
 
-            return DB::table('movie_translations')->insertGetId([
-                'title' => $data['title'],
-                'description' => $data['description'],
-                'lang' => $data['lang'],
-                'movie_id' => $movie_id,
-                'created_at' => $now
-            ]);
+            $trans_id = $this->insertTranslations($data, $movie_id, $lang);
+            return [$movie_id, $trans_id];
+
         } catch(\Exception $e) {
             var_dump($e->getMessage());
         }
+    }
+
+    public function insertTranslations($options, $movie_id, $lang)
+    {
+        $now = Carbon::now();
+        return DB::table('movie_translations')->insertGetId([
+            'title' => $options['title'],
+            'description' => $options['description'],
+            'lang' => $lang,
+            'movie_id' => $movie_id,
+            'created_at' => $now
+        ]);
     }
 }

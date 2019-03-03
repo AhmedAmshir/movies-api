@@ -194,15 +194,16 @@ class MoviesController extends Controller
         $returned = $this->CheckApiKey();
         if($returned) return $returned;
 
-        if(!array_key_exists('lang', $this->request_data)) {
-            return $this->response_handler->BadRequest("Invalid Parameters 'lang'");
-        }
+        // if(!array_key_exists('lang', $this->request_data)) {
+        //     return $this->response_handler->BadRequest("Invalid Parameters 'lang'");
+        // }
 
         if(array_key_exists('title', $this->request_data) && array_key_exists('description', $this->request_data)
         && array_key_exists('rating', $this->request_data) && array_key_exists('director', $this->request_data)
         && array_key_exists('profit', $this->request_data) && array_key_exists('genre', $this->request_data)
         && array_key_exists('actors', $this->request_data) && array_key_exists('year', $this->request_data)
-        && array_key_exists('image_url', $this->request_data)) {
+        && array_key_exists('image_url', $this->request_data) && array_key_exists('description_en', $this->request_data)
+        && array_key_exists('title_en', $this->request_data)  && array_key_exists('genre_en', $this->request_data)) {
 
             if($this->request_data['rating'] > 10 || $this->request_data['rating'] < 0) {
                 return $this->response_handler->NotFound('Rating must be in between 0 and 10');

@@ -5,6 +5,7 @@ namespace App\Managers;
 use App\Movie;
 use App\MovieGenre;
 use App\Managers\MovieManagerInterface;
+use App\Enum\GeneralEnum;
 
 class MovieManager implements MovieManagerInterface {
 
@@ -125,18 +126,27 @@ class MovieManager implements MovieManagerInterface {
         if(is_array($options) && !empty($options)) {
             
             $genres = explode(',', $options['genre']);
+            $genres_en = explode(',', $options['genre_en']);
             $options['genre'] = $genres;
-            $translations_id = $this->movie_model->save($options);
 
-            if($translations_id) {
-                foreach($genres as $genre) {
-                    $this->movie_genres_model->insertNewGenres($translations_id, $genre);
-                }
-                return TRUE;
+            $result = $this->movie_model->insertMovieData($options, GeneralEnum::$_locale['arabic']);
+            $this->addTranslationsGenres($result[1], $genres);
+
+            $translations_en_id = $this->movie_model->insertTranslations(['title' => $options['title_en'], 'description' => $options['description_en']], $result[1], GeneralEnum::$_locale['english']);
+            if($translations_en_id) {
+                return $this->addTranslationsGenres($translations_en_id, $genres_en);
             }
             return FALSE;
         }
         return FALSE;
+    }
+
+    public function addTranslationsGenres($trans_id, $genres)
+    {
+        foreach($genres as $genre) {
+            $this->movie_genres_model->insertNewGenres($trans_id, $genre);
+        }
+        return TRUE;
     }
     
 

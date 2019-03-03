@@ -8,7 +8,9 @@ class GeneralEnum {
 	
 	public static $API_KEY = 'rdoqs2xdfsm-xsw';
 
-	public static $_locale = ['ar', 'en'];
+	public static $_locale = [
+		'arabic' => 'ar', 
+		'english' => 'en'];
 
 	public static $greater_or_lower = [
 		'greater' => '+', 
